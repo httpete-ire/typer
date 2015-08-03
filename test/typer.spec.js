@@ -20,7 +20,7 @@ describe('typer directive', function() {
 
     compile = $compile;
 
-    var template = '<typer></typer>';
+    var template = '<typer words="[]" repeat="true"></typer>';
 
     element = render(template, $scope);
   }));
@@ -28,6 +28,14 @@ describe('typer directive', function() {
   it('should be defined', function() {
     expect(scope).to.be.defined;
     expect(element).to.be.defined;
+  });
+
+  it('should contain an array of words', function() {
+    expect(scope.words).to.be.instanceof(Array);
+  });
+
+  it('should have a repeat setting', function () {
+    expect(scope.repeat).to.be.true;
   });
 
 });

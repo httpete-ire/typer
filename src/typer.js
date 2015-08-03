@@ -10,7 +10,8 @@
     return {
       template:'<span></span>',
       scope: {
-        words: '='
+        words: '=',
+        repeat: '=?'
       },
       link: link
     };
