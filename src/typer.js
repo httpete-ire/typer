@@ -11,7 +11,7 @@
   function Typer() {
 
     return {
-      template:'<span ng-class="{typerr__cursor : cursor}"></span>',
+      template:'<span ng-class="{typerr__cursor : cursor}">{{words[0]}}</span>',
       scope: {
         words: '=',
         repeat: '=?',
@@ -49,7 +49,7 @@
       scope.cursor = config.cursor;
 
       setTimeout(function() {
-        type(el, config);
+        backspace(el, config);
       }, config.startDelay);
 
     }
