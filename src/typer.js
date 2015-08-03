@@ -7,8 +7,10 @@
 
   /**
    * Angular directive to simulate someone typing out a list of words
+   *
+   * ngRepeat
    */
-  function Typer() {
+  function Typer($timeout, $interval) {
 
     return {
       template:'<span ng-class="{typer__cursor : cursor}">{{words[0]}}</span>',
@@ -41,7 +43,9 @@
 
       // override default settings if set on the attribute
       var config = {};
-      config.repeat = (!scope.repeat) ? scope.repeat : true;
+
+      // default repeat to true
+      config.repeat = (typeof scope.repeat === 'undefined') ? true : scope.repeat;
 
       // config.cursor = (!scope.cursor) ? true : scope.cursor;
       config.words = scope.words;
@@ -63,9 +67,10 @@
         config.highlight.speed = config.backspaceTime;
       }
 
+      // store the timers so we can cancel them
       config.timer = null;
 
-      setTimeout(function() {
+      $timeout(function() {
         if (config.highlight) {
           config.span = createSpan(el, config);
           highlight(el, config);
@@ -82,7 +87,7 @@
       var index = 0;
       var fn;
 
-      config.timer = setInterval(function() {
+      config.timer = $interval(function() {
         element.html(word.substring(0, index + 1));
 
         if (++index === letters) {
@@ -92,7 +97,8 @@
           if (config.count === config.wordCount - 1 && !config.repeat) {
             config.onComplete();
 
-            // clear timer and call complete function
+            $interval.cancel(config.timer);
+            config.timer = null;
             return;
           }
 
@@ -109,7 +115,7 @@
       var word = config.words[config.count];
       var letters = word.length;
 
-      config.timer = setInterval(function() {
+      config.timer = $interval(function() {
 
         element.html(word.substring(0, letters - 1));
 
@@ -131,14 +137,14 @@
       var letters = word.length;
       var index = 0;
 
-      config.timer = setInterval(function() {
+      config.timer = $interval(function() {
 
         element.html(word.substring(0, letters - 1));
         config.span.html(word.substring(letters - 1));
 
         if (--letters === 0) {
 
-          setTimeout(function() {
+          $timeout(function() {
             config.span.html('');
           }, config.pause);
 
@@ -154,7 +160,7 @@
     }
 
     /**
-     * [createSpan description]
+     * create a span elemnt that
      * @param  {[type]} element [description]
      * @param  {[type]} config  [description]
      * @return {[type]}         [description]
@@ -180,10 +186,10 @@
      * @return {[type]}           [description]
      */
     function nextAction(element, config, fn) {
-      clearInterval(config.timer);
+      $interval.cancel(config.timer);
       config.timer = null;
-      config.timer = setTimeout(function() {
-        fn(element, config);
+      $timeout(function() {
+        fn.apply(null, [element, config]);
       }, config.pause);
     }
 
