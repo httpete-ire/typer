@@ -15,7 +15,11 @@
       scope: {
         words: '=',
         repeat: '=?',
-        cursor: '=?'
+        cursor: '=?',
+        startDelay: '@',
+        pause: '@',
+        typeTime: '@',
+        backspaceTime: '@'
       },
       link: link
     };
@@ -37,9 +41,9 @@
       config.wordCount = config.words.length;
       config.count = 0;
       config.startDelay = scope.startDelay || 500;
-      config.delay = 2000;
-      config.typeTime = 250;
-      config.backspaceTime = 250;
+      config.pause = scope.pause || 1000;
+      config.typeTime = scope.typeTime || 250;
+      config.backspaceTime = scope.backspaceTime || config.typeTime;;
       config.timer = null;
 
       scope.cursor = config.cursor;
@@ -106,7 +110,7 @@
       config.timer = null;
       config.timer = setTimeout(function() {
         fn(element, config);
-      }, config.delay);
+      }, config.pause);
     }
 
   }
