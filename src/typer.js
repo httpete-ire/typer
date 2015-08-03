@@ -19,7 +19,10 @@
         startDelay: '@',
         pause: '@',
         typeTime: '@',
-        backspaceTime: '@'
+        backspaceTime: '@',
+        onTyped: '&',
+        onComplete: '&',
+        onDeleted: '&'
       },
       link: link
     };
@@ -43,7 +46,10 @@
       config.startDelay = scope.startDelay || 500;
       config.pause = scope.pause || 1000;
       config.typeTime = scope.typeTime || 250;
-      config.backspaceTime = scope.backspaceTime || config.typeTime;;
+      config.backspaceTime = scope.backspaceTime || config.typeTime;
+      config.onTyped = scope.onTyped;
+      config.onDeleted = scope.onDeleted;
+      config.onComplete = scope.onComplete;
       config.timer = null;
 
       scope.cursor = config.cursor;
@@ -67,11 +73,12 @@
           // if last word and repeat is false
           // call complete function
           if (config.count === config.wordCount - 1 && !config.repeat) {
-
+            config.onComplete();
             // clear timer and call complete function
             return;
           }
 
+          config.onTyped();
           nextAction(element, config, backspace);
         }
 
@@ -92,6 +99,7 @@
           // reset count if end of word array
           config.count =  (config.count === config.wordCount - 1) ? 0 : config.count + 1;
 
+          config.onDeleted();
           nextAction(element, config, type);
         }
 
