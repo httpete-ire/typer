@@ -11,7 +11,7 @@
   function Typer() {
 
     return {
-      template:'<span ng-class="{typerr__cursor : cursor}">{{words[0]}}</span>',
+      template:'<span ng-class="{typer__cursor : cursor}">{{words[0]}}</span>',
       scope: {
         words: '=',
         repeat: '=?',
@@ -20,11 +20,14 @@
         pause: '@',
         typeTime: '@',
         backspaceTime: '@',
+        highlightBackground: '@',
+        highlightColor: '@',
         onTyped: '&',
         onComplete: '&',
         onDeleted: '&'
       },
-      link: link
+      link: link,
+      replace: true
     };
 
     /**
@@ -39,7 +42,8 @@
       // override default settings if set on the attribute
       var config = {};
       config.repeat = (!scope.repeat) ? scope.repeat : true;
-      config.cursor = (!scope.cursor) ? true : scope.cursor;
+
+      // config.cursor = (!scope.cursor) ? true : scope.cursor;
       config.words = scope.words;
       config.wordCount = config.words.length;
       config.count = 0;
@@ -50,12 +54,24 @@
       config.onTyped = scope.onTyped;
       config.onDeleted = scope.onDeleted;
       config.onComplete = scope.onComplete;
+
+      // if a highligh color is set create and store the highlight settings
+      if (scope.highlightBackground) {
+        config.highlight = {};
+        config.highlight.background = scope.highlightBackground;
+        config.highlight.color = scope.highlightColor || '#FFFFFF';
+        config.highlight.speed = config.backspaceTime;
+      }
+
       config.timer = null;
 
-      scope.cursor = config.cursor;
-
       setTimeout(function() {
-        backspace(el, config);
+        if (config.highlight) {
+          config.span = createSpan(el, config);
+          highlight(el, config);
+        } else {
+          backspace(el, config);
+        }
       }, config.startDelay);
 
     }
@@ -64,6 +80,7 @@
       var word = config.words[config.count];
       var letters = word.length;
       var index = 0;
+      var fn;
 
       config.timer = setInterval(function() {
         element.html(word.substring(0, index + 1));
@@ -74,12 +91,14 @@
           // call complete function
           if (config.count === config.wordCount - 1 && !config.repeat) {
             config.onComplete();
+
             // clear timer and call complete function
             return;
           }
 
           config.onTyped();
-          nextAction(element, config, backspace);
+          fn = (config.highlight) ? highlight : backspace;
+          nextAction(element, config, fn);
         }
 
       }, config.typeTime);
@@ -100,10 +119,57 @@
           config.count =  (config.count === config.wordCount - 1) ? 0 : config.count + 1;
 
           config.onDeleted();
+
           nextAction(element, config, type);
         }
 
       }, config.backspaceTime);
+    }
+
+    function highlight(element, config) {
+      var word = config.words[config.count];
+      var letters = word.length;
+      var index = 0;
+
+      config.timer = setInterval(function() {
+
+        element.html(word.substring(0, letters - 1));
+        config.span.html(word.substring(letters - 1));
+
+        if (--letters === 0) {
+
+          setTimeout(function() {
+            config.span.html('');
+          }, config.pause);
+
+          // reset count if end of word array
+          config.count =  (config.count === config.wordCount - 1) ? 0 : config.count + 1;
+
+          config.onDeleted();
+          nextAction(element, config, type);
+        }
+
+      }, config.highlight.speed / letters);
+
+    }
+
+    /**
+     * [createSpan description]
+     * @param  {[type]} element [description]
+     * @param  {[type]} config  [description]
+     * @return {[type]}         [description]
+     */
+    function createSpan(element, config) {
+      var span = angular.element('<span></span>');
+
+      span.css({
+        backgroundColor: config.highlight.background,
+        color: config.highlight.color
+      });
+
+      element.after(span);
+
+      return span;
     }
 
     /**
