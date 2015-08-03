@@ -2,6 +2,23 @@
   'use strict';
 
   angular
-  .module('typer', []);
+  .module('typer', [])
+  .directive('typer', Typer);
+
+  function Typer($interval) {
+
+    return {
+      template:'<span></span>',
+      scope: {
+        words: '='
+      },
+      link: link
+    };
+
+    function link(scope, elem, attr) {
+      var el = angular.element(elem[0]);
+    }
+
+  }
 
 })();

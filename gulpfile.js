@@ -12,6 +12,12 @@ gulp.task('dev:client',
 
 gulp.task('dev:server', ['lint:server:watch', 'test:server']);
 
-gulp.task('build', function() {
+gulp.task('move', function() {
   return gulp.src(config.js.client).pipe(gulp.dest('./example'));
 });
+
+gulp.task('build', function() {
+  gulp.watch(config.js.client, ['move']);
+});
+
+
