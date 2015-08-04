@@ -38,10 +38,15 @@ describe('typer directive', function() {
     expect(scope.repeat).to.be.true;
   });
 
-  it('repeat setting should default to false', function () {
+  it('repeat setting should default to true', function () {
     var template = '<typer words="[]"></typer>';
     element = render(template, $scope);
-    expect(scope.repeat).to.be.false;
+    expect(scope.repeat).to.be.true;
+  });
+
+  it('timer settings should have a default value', function () {
+    console.log(scope.pause);
+    expect(scope.pause).to.be.defined;
   });
 
 });

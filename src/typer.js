@@ -29,7 +29,7 @@
         onDeleted: '&'
       },
       link: link,
-      replace: true
+      restrict: 'E'
     };
 
     /**
@@ -45,7 +45,7 @@
       var config = {};
 
       // default repeat to true
-      config.repeat = (typeof scope.repeat === 'undefined') ? true : scope.repeat;
+      config.repeat = scope.repeat = (typeof scope.repeat === 'undefined') ? true : scope.repeat;
 
       // config.cursor = (!scope.cursor) ? true : scope.cursor;
       config.words = scope.words;
@@ -81,6 +81,12 @@
 
     }
 
+    /**
+     * [type description]
+     * @param  {[type]} element [description]
+     * @param  {[type]} config  [description]
+     * @return {[type]}         [description]
+     */
     function type(element, config) {
       var word = config.words[config.count];
       var letters = word.length;
@@ -111,6 +117,12 @@
 
     }
 
+    /**
+     * [backspace description]
+     * @param  {[type]} element [description]
+     * @param  {[type]} config  [description]
+     * @return {[type]}         [description]
+     */
     function backspace(element, config) {
       var word = config.words[config.count];
       var letters = word.length;
@@ -132,6 +144,12 @@
       }, config.backspaceTime);
     }
 
+    /**
+     * [highlight description]
+     * @param  {[type]} element [description]
+     * @param  {[type]} config  [description]
+     * @return {[type]}         [description]
+     */
     function highlight(element, config) {
       var word = config.words[config.count];
       var letters = word.length;
