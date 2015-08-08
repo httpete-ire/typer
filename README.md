@@ -49,6 +49,7 @@ Then declare the typer directive in your markup
 
 **Note:** all times are in milliseconds
 
+<<<<<<< HEAD
 * [words](#words-required)
 * [repeat](#repeat-optional)
 * [start-delay](#start-delay-optional)
@@ -61,7 +62,6 @@ Then declare the typer directive in your markup
 * [highlight-background](#highlight-background-optional)
 * [highlight-color](#highlight-color-optional)
 * [highlight-time](#highlight-time-optional)
-
 
 
 ### words (required)
