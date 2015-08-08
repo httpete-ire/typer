@@ -2,7 +2,7 @@
 
 ![](https://cloud.githubusercontent.com/assets/1556430/9096597/f9b9f254-3bb5-11e5-8c98-3f77c4203dd5.gif)
 
-> [demo](www.httpete.com/typer)
+> [demo](http://www.httpete.com/typer/)
 
 typer is an Angular directive that simulates someone typing and deleting over a list of words. The directive is highly customisable and allows the words to be set by passing an array of strings as an attribute, the transition times can also be set on the directive. [see below](#options) for a full list of customisations.
 
