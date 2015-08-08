@@ -63,7 +63,6 @@ Then declare the typer directive in your markup
 * [highlight-time](#highlight-time-optional)
 
 
-
 ### words (required)
 
 Array of strings to loop over and simulate someone typing out each single word
