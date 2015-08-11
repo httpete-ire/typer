@@ -23,7 +23,7 @@ include the typer directive source file in your html
 Mark the typer module as a dependecy of your angular app
 
 ```
-angular.moudle('myApp', ['revealer']);
+angular.module('myApp', ['typer']);
 
 ```
 
