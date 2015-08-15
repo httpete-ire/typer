@@ -50,6 +50,7 @@ Then declare the typer directive in your markup
 **Note:** all times are in milliseconds
 
 * [words](#words-required)
+* [start-typing] (#start-typing)
 * [repeat](#repeat-optional)
 * [start-delay](#start-delay-optional)
 * [pause](#pause-optional)
@@ -69,6 +70,16 @@ Array of strings to loop over and simulate someone typing out each single word
 
 ```
 words="['Angular', 'React', 'Ember']"
+```
+
+### start-typing (optional)
+
+Set whether the directives first animation is either the type or delete/highlight
+
+*defaults* to false
+
+```
+start-typing="true"
 ```
 
 ### repeat (optional)
@@ -161,6 +172,9 @@ highlight-time="400"
 ```
 
 # Change log
+
+#### 0.2.0
+* startTyping functionality
 
 #### 0.1.1
 * set the default repeat attribute to true
