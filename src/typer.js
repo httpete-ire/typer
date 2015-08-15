@@ -13,7 +13,7 @@
   function Typer($timeout, $interval) {
 
     return {
-      template:'<span ng-class="{typer__cursor : cursor}">{{words[0]}}</span>',
+      template:'<span ng-class="{typer__cursor : cursor}">{{setInitalWord()}}</span>',
       scope: {
         words: '=',
         repeat: '=?',
@@ -26,7 +26,8 @@
         highlightColor: '@',
         onTyped: '&',
         onComplete: '&',
-        onDeleted: '&'
+        onDeleted: '&',
+        startTyping: '=?'
       },
       link: link,
       restrict: 'E'
@@ -59,6 +60,8 @@
       config.onDeleted = scope.onDeleted;
       config.onComplete = scope.onComplete;
 
+      config.startTyping = scope.startTyping = (scope.startTyping === true) ? true : false;
+
       // if a highligh color is set create and store the highlight settings
       if (scope.highlightBackground) {
         config.highlight = {};
@@ -71,13 +74,30 @@
       config.timer = null;
 
       $timeout(function() {
+
         if (config.highlight) {
           config.span = createSpan(el, config);
-          highlight(el, config);
-        } else {
-          backspace(el, config);
         }
+
+        if (config.startTyping) {
+          type(el, config);
+        } else {
+          if (config.highlight) {
+            highlight(el, config);
+          }else {
+            backspace(el, config);
+          }
+        }
+
       }, config.startDelay);
+
+      scope.setInitalWord = function() {
+        if (config.startTyping) {
+          return '';
+        } else {
+          return config.words[0];
+        }
+      }
 
     }
 
