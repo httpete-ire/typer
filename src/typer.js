@@ -13,7 +13,7 @@
   function Typer($timeout, $interval) {
 
     return {
-      template:'<span ng-class="{typer__cursor : cursor}">{{setInitalWord()}}</span>',
+      template:'<span class="typer__cursor">{{setInitalWord()}}</span>',
       scope: {
         words: '=',
         repeat: '=?',
@@ -48,7 +48,6 @@
       // default repeat to true
       config.repeat = scope.repeat = (typeof scope.repeat === 'undefined') ? true : scope.repeat;
 
-      // config.cursor = (!scope.cursor) ? true : scope.cursor;
       config.words = scope.words;
       config.wordCount = config.words.length;
       config.count = 0;
@@ -98,6 +97,13 @@
           return config.words[0];
         }
       }
+
+      scope.$watchCollection('words', function(newVal, oldVal) {
+        if (newVal) {
+          config.words = newVal;
+          config.wordCount = config.words.length;
+        }
+      });
 
     }
 

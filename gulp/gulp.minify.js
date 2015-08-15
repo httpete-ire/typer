@@ -14,7 +14,7 @@ gulp.task('minify', ['clean'], function() {
   return gulp
     .src(config.js.client)
     .pipe($.ngAnnotate())
-    .pipe($.concat('revealer.min.js'))
+    .pipe($.concat('typer.min.js'))
     .pipe($.uglify())
     .pipe($.header(banner, { package: package }))
     .pipe(gulp.dest(config.build));

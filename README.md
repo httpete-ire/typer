@@ -173,6 +173,9 @@ highlight-time="400"
 
 # Change log
 
+### 0.2.1
+* watch words array for changes
+
 #### 0.2.0
 * startTyping functionality
 
