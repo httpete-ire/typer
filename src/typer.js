@@ -48,9 +48,8 @@
 
       // default repeat to true
       config.repeat = scope.repeat = (typeof scope.repeat === 'undefined') ? true : scope.repeat;
-
       scope.shuffle = (scope.shuffle === true) ? true : false;
-
+      config.startTyping = scope.startTyping = (scope.startTyping === true) ? true : false;
       config.words = (scope.shuffle) ? shuffle(scope.words) : scope.words;
       config.wordCount = config.words.length;
       config.count = 0;
@@ -62,7 +61,8 @@
       config.onDeleted = scope.onDeleted;
       config.onComplete = scope.onComplete;
 
-      config.startTyping = scope.startTyping = (scope.startTyping === true) ? true : false;
+      // store the timers so we can cancel them
+      config.timer = null;
 
       // if a highligh color is set create and store the highlight settings
       if (scope.highlightBackground) {
@@ -70,28 +70,13 @@
         config.highlight.background = scope.highlightBackground;
         config.highlight.color = scope.highlightColor || '#FFFFFF';
         config.highlight.speed = config.backspaceTime;
+
+        config.backAction = highlight;
+        config.span = createSpan(el, config);
+
+      } else {
+        config.backAction = backspace;
       }
-
-      // store the timers so we can cancel them
-      config.timer = null;
-
-      $timeout(function() {
-
-        if (config.highlight) {
-          config.span = createSpan(el, config);
-        }
-
-        if (config.startTyping) {
-          type(el, config);
-        } else {
-          if (config.highlight) {
-            highlight(el, config);
-          }else {
-            backspace(el, config);
-          }
-        }
-
-      }, config.startDelay);
 
       scope.setInitalWord = function() {
         if (config.startTyping) {
@@ -108,6 +93,29 @@
         }
       });
 
+      // start the Typer animations
+      $timeout(function() {
+        start(config, el);
+      }, config.startDelay);
+
+    }
+
+    /**
+     * start the Typer animation using the correct
+     * action.
+     * @param  {Object}        config
+     * @param  {DOM Element}   el
+     */
+    function start(config, el) {
+      if (config.startTyping) {
+        type(el, config);
+      } else {
+        if (config.highlight) {
+          highlight(el, config);
+        }else {
+          backspace(el, config);
+        }
+      }
     }
 
     /**
@@ -134,15 +142,12 @@
           // call complete function
           if (config.count === config.wordCount - 1 && !config.repeat) {
             config.onComplete();
-
-            $interval.cancel(config.timer);
-            config.timer = null;
+            clearTimer(config);
             return;
           }
 
           config.onTyped();
-          fn = (config.highlight) ? highlight : backspace;
-          nextAction(element, config, fn);
+          nextAction(element, config, config.backAction);
         }
 
       }, config.typeTime);
@@ -165,12 +170,8 @@
         element.html(word.substring(0, letters - 1));
 
         if (--letters === 0) {
-
-          // reset count if end of word array
-          config.count =  (config.count === config.wordCount - 1) ? 0 : config.count + 1;
-
+          config.count =  getCount(config.count, config.wordCount);
           config.onDeleted();
-
           nextAction(element, config, type);
         }
 
@@ -201,8 +202,7 @@
           }, config.pause);
 
           // reset count if end of word array
-          config.count =  (config.count === config.wordCount - 1) ? 0 : config.count + 1;
-
+          config.count = getCount(config.count, config.wordCount);
           config.onDeleted();
           nextAction(element, config, type);
         }
@@ -240,13 +240,30 @@
      * @param  {Function}      fn
      */
     function nextAction(element, config, fn) {
-
-      $interval.cancel(config.timer);
-      config.timer = null;
-
+      clearTimer(config);
       $timeout(function() {
         fn.apply(null, [element, config]);
       }, config.pause);
+    }
+
+    /**
+     * clear the interval and set the timer on the
+     * config to null
+     * @param  {Object} config
+     */
+    function clearTimer(config) {
+      $interval.cancel(config.timer);
+      config.timer = null;
+    }
+
+    /**
+     * calculate if the word is the last word, if it
+     * is reset to first word. Otherwise use next word
+     * @param  {Object} config
+     * @return {Number}
+     */
+    function getCount(count, wordCount) {
+      return (count === wordCount - 1) ? 0 : count + 1;
     }
 
     /**

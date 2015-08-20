@@ -182,6 +182,10 @@ highlight-time="400"
 
 # Change log
 
+### 0.2.2
+* shuffle words feature
+* refactor of link function
+
 ### 0.2.1
 * watch words array for changes
 

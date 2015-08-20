@@ -1,6 +1,6 @@
 {
   "name": "typer",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Angular directive to simulate someone typing out a list of words",
   "main": "src/typer.js",
   "scripts": {
