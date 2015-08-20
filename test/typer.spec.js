@@ -50,6 +50,10 @@ describe('typer directive', function() {
     expect(scope.pause).to.be.defined;
   });
 
+  it('shuffle should default to false', function () {
+    expect(scope.shuffle).to.be.false;
+  });
+
   describe('startTyping', function() {
 
     beforeEach(function() {
@@ -60,6 +64,19 @@ describe('typer directive', function() {
     it('initally the element should be empty', function() {
       var result = element.find('span').html();
       expect(result).to.equal('');
+    });
+
+  });
+
+  describe('shuffle feature', function() {
+
+    beforeEach(function() {
+      var template = '<typer words="words" repeat="true" shuffle="true"></typer>';
+      element = render(template, $scope);
+    });
+
+    it('shuffle on scope should be true', function() {
+      expect(scope.shuffle).to.be.true;
     });
 
   });

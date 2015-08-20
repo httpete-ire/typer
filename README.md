@@ -52,6 +52,7 @@ Then declare the typer directive in your markup
 * [words](#words-required)
 * [start-typing] (#start-typing)
 * [repeat](#repeat-optional)
+* [shuffle](#shuffle-optional)
 * [start-delay](#start-delay-optional)
 * [pause](#pause-optional)
 * [type-time](#type-time-optional)
@@ -88,6 +89,14 @@ set whether to continuously loop over the words, defaults to true
 
 ```
 repeat="false"
+```
+
+### shuffle (optional)
+
+set whether to randomly shufflethe array of words, defaults to false
+
+```
+shuffle="true"
 ```
 
 
