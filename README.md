@@ -182,6 +182,10 @@ highlight-time="400"
 
 # Change log
 
+### 0.3
+* UMD support
+* Travis CI
+
 ### 0.2.2
 * shuffle words feature
 * refactor of link function
