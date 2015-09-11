@@ -1,8 +1,23 @@
-(function() {
+(function(root, factory) {
+
   'use strict';
 
+  if (typeof define === 'function' && define.amd) {
+    define(['angular'], factory);
+  } else if (typeof module !== 'undefined' && typeof module.exports === 'object') {
+    module.exports = factory(require('angular'));
+  } else {
+    return factory(root.angular);
+  }
+
+})(this, function(angular) {
+
+  'use strict';
+
+  var MODULE = 'typer';
+
   angular
-  .module('typer', [])
+  .module(MODULE, [])
   .directive('typer', Typer);
 
   /**
@@ -13,26 +28,26 @@
   function Typer($timeout, $interval) {
 
     return {
-      template:'<span class="typer__cursor">{{setInitalWord()}}</span>',
-      scope: {
-        words: '=',
-        repeat: '=?',
-        cursor: '=?',
-        startDelay: '@',
-        pause: '@',
-        typeTime: '@',
-        backspaceTime: '@',
-        highlightBackground: '@',
-        highlightColor: '@',
-        onTyped: '&',
-        onComplete: '&',
-        onDeleted: '&',
-        startTyping: '=?',
-        shuffle: '=?'
-      },
-      link: link,
-      restrict: 'E'
-    };
+        template:'<span class="typer__cursor">{{setInitalWord()}}</span>',
+        scope: {
+          words: '=',
+          repeat: '=?',
+          cursor: '=?',
+          startDelay: '@',
+          pause: '@',
+          typeTime: '@',
+          backspaceTime: '@',
+          highlightBackground: '@',
+          highlightColor: '@',
+          onTyped: '&',
+          onComplete: '&',
+          onDeleted: '&',
+          startTyping: '=?',
+          shuffle: '=?'
+        },
+        link: link,
+        restrict: 'E'
+      };
 
     /**
      * set up the default options and start the typing effect
@@ -41,64 +56,64 @@
      * @param  {Object} attr
      */
     function link(scope, elem, attr) {
-      var el = angular.element(elem[0]);
+        var el = angular.element(elem[0]);
 
-      // override default settings if set on the attribute
-      var config = {};
+        // override default settings if set on the attribute
+        var config = {};
 
-      // default repeat to true
-      config.repeat = scope.repeat = (typeof scope.repeat === 'undefined') ? true : scope.repeat;
-      scope.shuffle = (scope.shuffle === true) ? true : false;
-      config.startTyping = scope.startTyping = (scope.startTyping === true) ? true : false;
-      config.words = (scope.shuffle) ? shuffle(scope.words) : scope.words;
-      config.wordCount = config.words.length;
-      config.count = 0;
-      config.startDelay = scope.startDelay || 500;
-      config.pause = scope.pause || 1000;
-      config.typeTime = scope.typeTime || 250;
-      config.backspaceTime = scope.backspaceTime || config.typeTime;
-      config.onTyped = scope.onTyped;
-      config.onDeleted = scope.onDeleted;
-      config.onComplete = scope.onComplete;
+        // default repeat to true
+        config.repeat = scope.repeat = (typeof scope.repeat === 'undefined') ? true : scope.repeat;
+        scope.shuffle = (scope.shuffle === true) ? true : false;
+        config.startTyping = scope.startTyping = (scope.startTyping === true) ? true : false;
+        config.words = (scope.shuffle) ? shuffle(scope.words) : scope.words;
+        config.wordCount = config.words.length;
+        config.count = 0;
+        config.startDelay = scope.startDelay || 500;
+        config.pause = scope.pause || 1000;
+        config.typeTime = scope.typeTime || 250;
+        config.backspaceTime = scope.backspaceTime || config.typeTime;
+        config.onTyped = scope.onTyped;
+        config.onDeleted = scope.onDeleted;
+        config.onComplete = scope.onComplete;
 
-      // store the timers so we can cancel them
-      config.timer = null;
+        // store the timers so we can cancel them
+        config.timer = null;
 
-      // if a highligh color is set create and store the highlight settings
-      if (scope.highlightBackground) {
-        config.highlight = {};
-        config.highlight.background = scope.highlightBackground;
-        config.highlight.color = scope.highlightColor || '#FFFFFF';
-        config.highlight.speed = config.backspaceTime;
+        // if a highligh color is set create and store the highlight settings
+        if (scope.highlightBackground) {
+          config.highlight = {};
+          config.highlight.background = scope.highlightBackground;
+          config.highlight.color = scope.highlightColor || '#FFFFFF';
+          config.highlight.speed = config.backspaceTime;
 
-        config.backAction = highlight;
-        config.span = createSpan(el, config);
+          config.backAction = highlight;
+          config.span = createSpan(el, config);
 
-      } else {
-        config.backAction = backspace;
-      }
-
-      scope.setInitalWord = function() {
-        if (config.startTyping) {
-          return '';
         } else {
-          return config.words[0];
+          config.backAction = backspace;
         }
+
+        scope.setInitalWord = function() {
+          if (config.startTyping) {
+            return '';
+          } else {
+            return config.words[0];
+          }
+        }
+
+        scope.$watchCollection('words', function(newVal, oldVal) {
+          if (newVal) {
+            config.words = newVal;
+            config.wordCount = config.words.length;
+          }
+        });
+
+        // start the Typer animations
+        $timeout(function() {
+          start(config, el);
+        }, config.startDelay);
+
       }
-
-      scope.$watchCollection('words', function(newVal, oldVal) {
-        if (newVal) {
-          config.words = newVal;
-          config.wordCount = config.words.length;
-        }
-      });
-
-      // start the Typer animations
-      $timeout(function() {
-        start(config, el);
-      }, config.startDelay);
-
-    }
 
     /**
      * start the Typer animation using the correct
@@ -107,16 +122,16 @@
      * @param  {DOM Element}   el
      */
     function start(config, el) {
-      if (config.startTyping) {
-        type(el, config);
-      } else {
-        if (config.highlight) {
-          highlight(el, config);
-        }else {
-          backspace(el, config);
+        if (config.startTyping) {
+          type(el, config);
+        } else {
+          if (config.highlight) {
+            highlight(el, config);
+          }else {
+            backspace(el, config);
+          }
         }
       }
-    }
 
     /**
      * loop over each letter in a word and add them to
@@ -128,31 +143,31 @@
      * @param  {Object}         config
      */
     function type(element, config) {
-      var word = config.words[config.count];
-      var letters = word.length;
-      var index = 0;
-      var fn;
+        var word = config.words[config.count];
+        var letters = word.length;
+        var index = 0;
+        var fn;
 
-      config.timer = $interval(function() {
-        element.html(word.substring(0, index + 1));
+        config.timer = $interval(function() {
+          element.html(word.substring(0, index + 1));
 
-        if (++index === letters) {
+          if (++index === letters) {
 
-          // if last word and repeat is false
-          // call complete function
-          if (config.count === config.wordCount - 1 && !config.repeat) {
-            config.onComplete();
-            clearTimer(config);
-            return;
+            // if last word and repeat is false
+            // call complete function
+            if (config.count === config.wordCount - 1 && !config.repeat) {
+              config.onComplete();
+              clearTimer(config);
+              return;
+            }
+
+            config.onTyped();
+            nextAction(element, config, config.backAction);
           }
 
-          config.onTyped();
-          nextAction(element, config, config.backAction);
-        }
+        }, config.typeTime);
 
-      }, config.typeTime);
-
-    }
+      }
 
     /**
      * loop over each letter in a word and remove it from the
@@ -162,21 +177,21 @@
      * @param  {Object}        config
      */
     function backspace(element, config) {
-      var word = config.words[config.count];
-      var letters = word.length;
+        var word = config.words[config.count];
+        var letters = word.length;
 
-      config.timer = $interval(function() {
+        config.timer = $interval(function() {
 
-        element.html(word.substring(0, letters - 1));
+          element.html(word.substring(0, letters - 1));
 
-        if (--letters === 0) {
-          config.count =  getCount(config.count, config.wordCount);
-          config.onDeleted();
-          nextAction(element, config, type);
-        }
+          if (--letters === 0) {
+            config.count =  getCount(config.count, config.wordCount);
+            config.onDeleted();
+            nextAction(element, config, type);
+          }
 
-      }, config.backspaceTime);
-    }
+        }, config.backspaceTime);
+      }
 
     /**
      * loop over each letter in a word and move it from one span to
@@ -186,30 +201,30 @@
      * @param  {Object}          config
      */
     function highlight(element, config) {
-      var word = config.words[config.count];
-      var letters = word.length;
-      var index = 0;
+        var word = config.words[config.count];
+        var letters = word.length;
+        var index = 0;
 
-      config.timer = $interval(function() {
+        config.timer = $interval(function() {
 
-        element.html(word.substring(0, letters - 1));
-        config.span.html(word.substring(letters - 1));
+          element.html(word.substring(0, letters - 1));
+          config.span.html(word.substring(letters - 1));
 
-        if (--letters === 0) {
+          if (--letters === 0) {
 
-          $timeout(function() {
-            config.span.html('');
-          }, config.pause);
+            $timeout(function() {
+              config.span.html('');
+            }, config.pause);
 
-          // reset count if end of word array
-          config.count = getCount(config.count, config.wordCount);
-          config.onDeleted();
-          nextAction(element, config, type);
-        }
+            // reset count if end of word array
+            config.count = getCount(config.count, config.wordCount);
+            config.onDeleted();
+            nextAction(element, config, type);
+          }
 
-      }, config.highlight.speed / letters);
+        }, config.highlight.speed / letters);
 
-    }
+      }
 
     /**
      * create a span element, set it CSS
@@ -219,17 +234,17 @@
      * @param  {Object}        config
      */
     function createSpan(element, config) {
-      var span = angular.element('<span></span>');
+        var span = angular.element('<span></span>');
 
-      span.css({
-        backgroundColor: config.highlight.background,
-        color: config.highlight.color
-      });
+        span.css({
+          backgroundColor: config.highlight.background,
+          color: config.highlight.color
+        });
 
-      element.after(span);
+        element.after(span);
 
-      return span;
-    }
+        return span;
+      }
 
     /**
      * clear the intervals and set config.timer
@@ -240,11 +255,11 @@
      * @param  {Function}      fn
      */
     function nextAction(element, config, fn) {
-      clearTimer(config);
-      $timeout(function() {
-        fn.apply(null, [element, config]);
-      }, config.pause);
-    }
+        clearTimer(config);
+        $timeout(function() {
+          fn.apply(null, [element, config]);
+        }, config.pause);
+      }
 
     /**
      * clear the interval and set the timer on the
@@ -252,9 +267,9 @@
      * @param  {Object} config
      */
     function clearTimer(config) {
-      $interval.cancel(config.timer);
-      config.timer = null;
-    }
+        $interval.cancel(config.timer);
+        config.timer = null;
+      }
 
     /**
      * calculate if the word is the last word, if it
@@ -263,8 +278,8 @@
      * @return {Number}
      */
     function getCount(count, wordCount) {
-      return (count === wordCount - 1) ? 0 : count + 1;
-    }
+        return (count === wordCount - 1) ? 0 : count + 1;
+      }
 
     /**
      * randomly shuffle an array using the
@@ -272,24 +287,25 @@
      * @param  {Array} arr
      */
     function shuffle(arr) {
-      var temp;
-      var count = arr.length;
-      var index;
+        var temp;
+        var count = arr.length;
+        var index;
 
-      while (count) {
+        while (count) {
 
-        // get random value from array
-        index = Math.floor(Math.random() * count);
+          // get random value from array
+          index = Math.floor(Math.random() * count);
 
-        count--;
-        temp = arr[count];
-        arr[count] = arr[index];
-        arr[index] = temp;
+          count--;
+          temp = arr[count];
+          arr[count] = arr[index];
+          arr[index] = temp;
+        }
+
+        return arr;
       }
-
-      return arr;
-    }
 
   }
 
-})();
+  return MODULE;
+});
