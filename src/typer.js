@@ -28,7 +28,7 @@
   function Typer($timeout, $interval) {
 
     return {
-        template:'<span class="typer__cursor">{{setInitalWord()}}</span>',
+        template:'<div style="display: inline-block;"><span class="typer">{{setInitalWord()}}</span><span class="typer__cursor">{{cursor}}</span></div>',
         scope: {
           words: '=',
           repeat: '=?',
@@ -43,10 +43,12 @@
           onComplete: '&',
           onDeleted: '&',
           startTyping: '=?',
-          shuffle: '=?'
+          shuffle: '=?',
+          cursor: '@'
         },
         link: link,
-        restrict: 'E'
+        restrict: 'E',
+        replace: true
       };
 
     /**
@@ -56,7 +58,9 @@
      * @param  {Object} attr
      */
     function link(scope, elem, attr) {
-        var el = angular.element(elem[0]);
+        var el = angular.element(elem[0].querySelector('.typer'));
+
+        console.log(el);
 
         // override default settings if set on the attribute
         var config = {};
@@ -75,6 +79,7 @@
         config.onTyped = scope.onTyped;
         config.onDeleted = scope.onDeleted;
         config.onComplete = scope.onComplete;
+        config.cursor = scope.cursor = scope.cursor || '|';
 
         // store the timers so we can cancel them
         config.timer = null;
