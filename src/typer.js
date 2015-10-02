@@ -60,8 +60,6 @@
     function link(scope, elem, attr) {
         var el = angular.element(elem[0].querySelector('.typer'));
 
-        console.log(el);
-
         // override default settings if set on the attribute
         var config = {};
 
@@ -79,6 +77,7 @@
         config.onTyped = scope.onTyped;
         config.onDeleted = scope.onDeleted;
         config.onComplete = scope.onComplete;
+        config.cursor = angular.element(elem[0].querySelector('.typer__cursor'));
 
         // store the timers so we can cancel them
         config.timer = null;
@@ -106,6 +105,10 @@
         }
 
         scope.getCursor = function() {
+          if (config.highlight) {
+            return '';
+          }
+
           return scope.cursor || '|';
         }
 
@@ -130,7 +133,7 @@
     function createTemplate() {
       var tmpl = ['<div style="display: inline-block;">',
                   '<span class="typer">{{setInitalWord()}}</span>',
-                  '<span class="typer__cursor">{{getCursor()}}</span>',
+                  '<span class="typer__cursor typer__cursor--blink">{{getCursor()}}</span>',
                   '</div>'];
 
       return tmpl.join('');
@@ -143,16 +146,24 @@
      * @param  {DOM Element}   el
      */
     function start(config, el) {
-        if (config.startTyping) {
-          type(el, config);
-        } else {
-          if (config.highlight) {
-            highlight(el, config);
-          }else {
-            backspace(el, config);
-          }
+      if (!config.highlight) {
+        toggleCursor(config);
+      }
+
+      if (config.startTyping) {
+        type(el, config);
+      } else {
+        if (config.highlight) {
+          highlight(el, config);
+        }else {
+          backspace(el, config);
         }
       }
+    }
+
+    function toggleCursor(config, add) {
+      (add) ? config.cursor.addClass('typer__cursor--blink') : config.cursor.removeClass('typer__cursor--blink');
+    }
 
     /**
      * loop over each letter in a word and add them to
@@ -277,7 +288,19 @@
      */
     function nextAction(element, config, fn) {
         clearTimer(config);
+
+        if (!config.highlight) {
+          // start blinking
+          toggleCursor(config, true);
+        }
+
         $timeout(function() {
+
+          if (!config.highlight) {
+            // start blinking
+            toggleCursor(config, false);
+          }
+
           fn.apply(null, [element, config]);
         }, config.pause);
       }
