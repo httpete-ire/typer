@@ -28,28 +28,28 @@
   function Typer($timeout, $interval) {
 
     return {
-        template:'<div style="display: inline-block;"><span class="typer">{{setInitalWord()}}</span><span class="typer__cursor">{{cursor}}</span></div>',
-        scope: {
-          words: '=',
-          repeat: '=?',
-          cursor: '=?',
-          startDelay: '@',
-          pause: '@',
-          typeTime: '@',
-          backspaceTime: '@',
-          highlightBackground: '@',
-          highlightColor: '@',
-          onTyped: '&',
-          onComplete: '&',
-          onDeleted: '&',
-          startTyping: '=?',
-          shuffle: '=?',
-          cursor: '@'
-        },
-        link: link,
-        restrict: 'E',
-        replace: true
-      };
+      template: createTemplate(),
+      scope: {
+        words: '=',
+        repeat: '=?',
+        cursor: '=?',
+        startDelay: '@',
+        pause: '@',
+        typeTime: '@',
+        backspaceTime: '@',
+        highlightBackground: '@',
+        highlightColor: '@',
+        onTyped: '&',
+        onComplete: '&',
+        onDeleted: '&',
+        startTyping: '=?',
+        shuffle: '=?',
+        cursor: '@'
+      },
+      link: link,
+      restrict: 'E',
+      replace: true
+    };
 
     /**
      * set up the default options and start the typing effect
@@ -79,7 +79,6 @@
         config.onTyped = scope.onTyped;
         config.onDeleted = scope.onDeleted;
         config.onComplete = scope.onComplete;
-        config.cursor = scope.cursor = scope.cursor || '|';
 
         // store the timers so we can cancel them
         config.timer = null;
@@ -106,6 +105,10 @@
           }
         }
 
+        scope.getCursor = function() {
+          return scope.cursor || '|';
+        }
+
         scope.$watchCollection('words', function(newVal, oldVal) {
           if (newVal) {
             config.words = newVal;
@@ -119,6 +122,19 @@
         }, config.startDelay);
 
       }
+
+    /**
+     * create the directive template and return it
+     * @return {String} Template
+     */
+    function createTemplate() {
+      var tmpl = ['<div style="display: inline-block;">',
+                  '<span class="typer">{{setInitalWord()}}</span>',
+                  '<span class="typer__cursor">{{getCursor()}}</span>',
+                  '</div>'];
+
+      return tmpl.join('');
+    }
 
     /**
      * start the Typer animation using the correct
