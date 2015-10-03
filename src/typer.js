@@ -28,26 +28,27 @@
   function Typer($timeout, $interval) {
 
     return {
-        template:'<span class="typer__cursor">{{setInitalWord()}}</span>',
-        scope: {
-          words: '=',
-          repeat: '=?',
-          cursor: '=?',
-          startDelay: '@',
-          pause: '@',
-          typeTime: '@',
-          backspaceTime: '@',
-          highlightBackground: '@',
-          highlightColor: '@',
-          onTyped: '&',
-          onComplete: '&',
-          onDeleted: '&',
-          startTyping: '=?',
-          shuffle: '=?'
-        },
-        link: link,
-        restrict: 'E'
-      };
+      template: createTemplate(),
+      scope: {
+        words: '=',
+        repeat: '=?',
+        startDelay: '@',
+        pause: '@',
+        typeTime: '@',
+        backspaceTime: '@',
+        highlightBackground: '@',
+        highlightColor: '@',
+        onTyped: '&',
+        onComplete: '&',
+        onDeleted: '&',
+        startTyping: '=?',
+        shuffle: '=?',
+        cursor: '@'
+      },
+      link: link,
+      restrict: 'E',
+      replace: true
+    };
 
     /**
      * set up the default options and start the typing effect
@@ -56,7 +57,7 @@
      * @param  {Object} attr
      */
     function link(scope, elem, attr) {
-        var el = angular.element(elem[0]);
+        var el = angular.element(elem[0].querySelector('.typer'));
 
         // override default settings if set on the attribute
         var config = {};
@@ -75,6 +76,7 @@
         config.onTyped = scope.onTyped;
         config.onDeleted = scope.onDeleted;
         config.onComplete = scope.onComplete;
+        config.cursor = angular.element(elem[0].querySelector('.typer__cursor'));
 
         // store the timers so we can cancel them
         config.timer = null;
@@ -101,6 +103,14 @@
           }
         }
 
+        scope.getCursor = function() {
+          if (config.highlight) {
+            return '';
+          }
+
+          return scope.cursor || '|';
+        }
+
         scope.$watchCollection('words', function(newVal, oldVal) {
           if (newVal) {
             config.words = newVal;
@@ -116,22 +126,43 @@
       }
 
     /**
+     * create the directive template and return it
+     * @return {String} Template
+     */
+    function createTemplate() {
+      var tmpl = ['<div style="display: inline-block;">',
+                  '<span class="typer">{{setInitalWord()}}</span>',
+                  '<span class="typer__cursor typer__cursor--blink">{{getCursor()}}</span>',
+                  '</div>'];
+
+      return tmpl.join('');
+    }
+
+    /**
      * start the Typer animation using the correct
      * action.
      * @param  {Object}        config
      * @param  {DOM Element}   el
      */
     function start(config, el) {
-        if (config.startTyping) {
-          type(el, config);
-        } else {
-          if (config.highlight) {
-            highlight(el, config);
-          }else {
-            backspace(el, config);
-          }
+      if (!config.highlight) {
+        toggleCursor(config);
+      }
+
+      if (config.startTyping) {
+        type(el, config);
+      } else {
+        if (config.highlight) {
+          highlight(el, config);
+        }else {
+          backspace(el, config);
         }
       }
+    }
+
+    function toggleCursor(config, add) {
+      (add) ? config.cursor.addClass('typer__cursor--blink') : config.cursor.removeClass('typer__cursor--blink');
+    }
 
     /**
      * loop over each letter in a word and add them to
@@ -256,7 +287,19 @@
      */
     function nextAction(element, config, fn) {
         clearTimer(config);
+
+        if (!config.highlight) {
+          // start blinking
+          toggleCursor(config, true);
+        }
+
         $timeout(function() {
+
+          if (!config.highlight) {
+            // start blinking
+            toggleCursor(config, false);
+          }
+
           fn.apply(null, [element, config]);
         }, config.pause);
       }

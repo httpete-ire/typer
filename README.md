@@ -63,6 +63,7 @@ Then declare the typer directive in your markup
 * [highlight-background](#highlight-background-optional)
 * [highlight-color](#highlight-color-optional)
 * [highlight-time](#highlight-time-optional)
+* [cursor](#cursor-optional)
 
 
 ### words (required)
@@ -82,7 +83,6 @@ Set whether the directives first animation is either the type or delete/highligh
 ```
 start-typing="true"
 ```
-
 ### repeat (optional)
 
 set whether to continuously loop over the words, defaults to true
@@ -180,7 +180,57 @@ unlike the backspace time which is for each character the highlight time is for 
 highlight-time="400"
 ```
 
+### cursor (optional)
+
+set a custom cursor, *defaults* to '|'
+
+*note*
+the cursor will not be set if the highlight-color is set
+
+```
+cursor="@"
+```
+
+include the following CSS for the cursor blinking effect
+
+```
+.typer__cursor--blink {
+  -webkit-animation: blink 1s infinite;
+  -moz-animation: blink 1s infinite;
+  animation: blink 1s infinite;
+}
+
+@-webkit-keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+```
+
 # Change log
+
+### 0.4.1
+* custom cursor
 
 ### 0.3
 * UMD support
