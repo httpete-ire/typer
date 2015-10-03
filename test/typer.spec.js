@@ -50,8 +50,12 @@ describe('typer directive', function() {
     expect(scope.pause).to.be.defined;
   });
 
-  it('shuffle should default to false', function () {
+  it('shuffle should default to false', function() {
     expect(scope.shuffle).to.be.false;
+  });
+
+  it('cursor should have a default value', function() {
+    expect(scope.getCursor()).to.equal('|');
   });
 
   describe('startTyping', function() {

@@ -32,7 +32,6 @@
       scope: {
         words: '=',
         repeat: '=?',
-        cursor: '=?',
         startDelay: '@',
         pause: '@',
         typeTime: '@',
