@@ -43,7 +43,9 @@
         onDeleted: '&',
         startTyping: '=?',
         shuffle: '=?',
-        cursor: '@'
+        cursor: '@',
+        start: '=?',
+        startTrigger: '=?'
       },
       link: link,
       restrict: 'E',
@@ -118,10 +120,19 @@
           }
         });
 
-        // start the Typer animations
-        $timeout(function() {
-          start(config, el);
-        }, config.startDelay);
+        if (scope.start) {
+          var unregister = scope.$watch('startTrigger', function(newVal, oldVal) {
+            if (typeof newVal === 'boolean' && newVal) {
+              start(config, el);
+              unregister();
+            }
+          });
+        } else {
+          // start the Typer animations
+          $timeout(function() {
+            start(config, el);
+          }, config.startDelay);
+        }
 
       }
 
