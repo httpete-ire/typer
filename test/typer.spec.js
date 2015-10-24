@@ -2,6 +2,7 @@ describe('typer directive', function() {
   var element;
   var scope;
   var compile;
+  var $scope;
 
   function render(template, _scope_) {
     var el = angular.element(template);
@@ -19,6 +20,8 @@ describe('typer directive', function() {
     $scope = $rootScope.$new();
 
     $scope.words = ['test1', 'test2', 'test3'];
+
+    $scope.start = false;
 
     compile = $compile;
 
@@ -83,6 +86,18 @@ describe('typer directive', function() {
       expect(scope.shuffle).to.be.true;
     });
 
+  });
+
+  describe('start trigger', function () {
+    beforeEach(function() {
+      var template = '<typer words="words" start="true" start-trigger="start"></typer>';
+      element = render(template, $scope);
+    });
+
+    it('start and trigger should be set on scope', function() {
+      expect(scope.start).to.be.true;
+      expect(scope.startTrigger).to.be.false;
+    });
   });
 
 });
