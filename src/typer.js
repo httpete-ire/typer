@@ -134,6 +134,9 @@
           }, config.startDelay);
         }
 
+        elem.on('$destroy', function(e) {
+          clearTimer(config);
+        });
       }
 
     /**
