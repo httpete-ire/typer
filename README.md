@@ -2,15 +2,15 @@
 
 ![](https://cloud.githubusercontent.com/assets/1556430/9096597/f9b9f254-3bb5-11e5-8c98-3f77c4203dd5.gif)
 
-> [demo](http://www.httpete.com/typer/)
+Typer is an Angular directive that simulates someone typing and deleting over a list of words. The directive is highly customisable and allows the words to be set by passing an array of strings as an attribute, the transition times can be set on the directive aswell as callback functions to get invoked after each action ('Type', 'Delete', 'Highlight')
 
-typer is an Angular directive that simulates someone typing and deleting over a list of words. The directive is highly customisable and allows the words to be set by passing an array of strings as an attribute, the transition times can also be set on the directive. [see below](#options) for a full list of customisations.
-
- If you have any suggestions for additional features or find any bugs please log them [here](/issues).
-
-Feel free to fork the repository and make a pull request :)
+[full list](#directive-options) of directive options or [advanced examples](http://httpete.com/typer/#examples)
 
 # Documentation
+
+---
+
+## Installation
 
 include the typer directive source file in your html
 
@@ -44,13 +44,13 @@ Then declare the typer directive in your markup
 
 ---
 
-## Options
-
+## Directive options
 
 **Note:** all times are in milliseconds
 
 * [words](#words-required)
-* [start-typing] (#start-typing)
+* [start-typing](#start-typing)
+* [start-trigger](#start-trigger)
 * [repeat](#repeat-optional)
 * [shuffle](#shuffle-optional)
 * [start-delay](#start-delay-optional)
@@ -83,6 +83,16 @@ Set whether the directives first animation is either the type or delete/highligh
 ```
 start-typing="true"
 ```
+
+### start-trigger (optional)
+
+Set a boolean variable on the directive that will start the directive when the variable changes to true
+
+```
+start-trigger="vm.controllerTrigger"
+```
+
+
 ### repeat (optional)
 
 set whether to continuously loop over the words, defaults to true
@@ -227,7 +237,21 @@ include the following CSS for the cursor blinking effect
 }
 ```
 
+## Contributing
+
+Contributions are welcome. Please be sure to document your changes.
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
+
 # Change log
+
+### 0.5.1
+* start-trigger
+* clear timers on destroy
 
 ### 0.4.1
 * custom cursor

@@ -44,7 +44,6 @@
         startTyping: '=?',
         shuffle: '=?',
         cursor: '@',
-        start: '=?',
         startTrigger: '=?'
       },
       link: link,
@@ -120,7 +119,7 @@
           }
         });
 
-        if (scope.start) {
+        if (scope.startTrigger !== undefined) {
           var unregister = scope.$watch('startTrigger', function(newVal, oldVal) {
             if (typeof newVal === 'boolean' && newVal) {
               start(config, el);
