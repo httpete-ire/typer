@@ -95,7 +95,6 @@ describe('typer directive', function() {
     });
 
     it('start and trigger should be set on scope', function() {
-      expect(scope.start).to.be.true;
       expect(scope.startTrigger).to.be.false;
     });
   });
