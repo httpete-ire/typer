@@ -1,5 +1,5 @@
 {
-  "name": "typer",
+  "name": "angular-typer",
   "version": "0.5.2",
   "description": "Angular directive to simulate someone typing out a list of words",
   "main": "src/typer.js",
@@ -10,8 +10,19 @@
     "angular",
     "directive"
   ],
-  "author": "Pete Redmond",
+   "repository": {
+    "type": "git",
+    "url": "https://github.com/httpete-ire/typer"
+  },
+  "author": "Pete Redmond <pete@httpete.com> (http://httpete.com)",
+  "contributors": [
+    "Pete Redmond <pete@httpete.com> (http://httpete.com)"
+  ],
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/httpete-ire/typer/issues"
+  },
+  "homepage": "http://httpete.com/typer",
   "devDependencies": {
     "angular": "^1.4.7",
     "angular-mocks": "^1.3.16",
