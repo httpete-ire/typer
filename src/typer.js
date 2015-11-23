@@ -63,10 +63,10 @@
         // override default settings if set on the attribute
         var config = {};
 
-        // default repeat to true
-        config.repeat = scope.repeat = (typeof scope.repeat === 'undefined') ? true : scope.repeat;
-        scope.shuffle = (scope.shuffle === true) ? true : false;
-        config.startTyping = scope.startTyping = (scope.startTyping === true) ? true : false;
+        config.repeat = scope.repeat = (isTrue(scope.repeat) || typeof scope.repeat === 'undefined') ? true : false;
+
+        scope.shuffle = isTrue(scope.shuffle) ? true : false;
+        config.startTyping = scope.startTyping = isTrue(scope.startTyping) ? true : false;
         config.words = (scope.shuffle) ? shuffle(scope.words) : scope.words;
         config.wordCount = config.words.length;
         config.count = 0;
@@ -360,6 +360,15 @@
 
         return arr;
       }
+
+    /**
+     * check if a value is either a truthy boolean or string
+     * @param  {String}  value
+     * @return {Boolean}
+     */
+    function isTrue(value) {
+      return (value === true || value === 'true');
+    }
 
   }
 

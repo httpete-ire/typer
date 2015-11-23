@@ -249,6 +249,9 @@ Contributions are welcome. Please be sure to document your changes.
 
 # Change log
 
+### 0.5.2
+* boolean attributes except either a boolean value or a string representation of the boolean
+
 ### 0.5.1
 * start-trigger
 * clear timers on destroy

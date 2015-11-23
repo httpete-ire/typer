@@ -23,9 +23,11 @@ describe('typer directive', function() {
 
     $scope.start = false;
 
+    $scope.repeat = 'true';
+
     compile = $compile;
 
-    var template = '<typer words="words" repeat="true"></typer>';
+    var template = '<typer words="words" repeat="repeat"></typer>';
 
     element = render(template, $scope);
   }));
@@ -75,10 +77,13 @@ describe('typer directive', function() {
 
   });
 
-  describe('shuffle feature', function() {
+  describe('boolean attributes', function() {
 
     beforeEach(function() {
-      var template = '<typer words="words" repeat="true" shuffle="true"></typer>';
+
+      $scope.shuffle = 'true';
+
+      var template = '<typer words="words" repeat="true" shuffle="shuffle"></typer>';
       element = render(template, $scope);
     });
 
