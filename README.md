@@ -27,6 +27,25 @@ angular.module('myApp', ['typer']);
 
 ```
 
+###  Alternative
+
+install with npm
+
+```
+npm install angular-typer
+```
+
+Using a module bundler such as __webpack__ or __browserify__ require the typer module as a dependecy of your angular app
+
+```
+var angular = require('angular');
+
+angular.module('app', [
+	require('angular-typer')
+]);
+```
+
+
 Then declare the typer directive in your markup
 
 ```
@@ -248,6 +267,9 @@ Contributions are welcome. Please be sure to document your changes.
 5. Create new Pull Request
 
 # Change log
+
+### 0.5.4
+* fix shuffle bug
 
 ### 0.5.3
 * publish to NPM
