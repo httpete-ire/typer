@@ -113,7 +113,7 @@
         }
 
         scope.$watchCollection('words', function(newVal, oldVal) {
-          if (newVal) {
+          if (newVal !== oldVal) {
             config.words = newVal;
             config.wordCount = config.words.length;
           }
