@@ -14,28 +14,25 @@ Typer is an Angular directive that simulates someone typing and deleting over a 
 
 include the typer directive source file in your html
 
-
 ```
  <script src="path/to/typer.js"></script>
 
 ```
 
-Mark the typer module as a dependecy of your angular app
+Mark the typer module as a dependency of your angular app
 
 ```
 angular.module('myApp', ['typer']);
 
 ```
 
-###  Alternative
-
-install with npm
+###  NPM installation
 
 ```
 npm install angular-typer
 ```
 
-Using a module bundler such as __webpack__ or __browserify__ require the typer module as a dependecy of your angular app
+Using a module bundler such as __webpack__ or __browserify__ require the typer module as a dependency of your angular app
 
 ```
 var angular = require('angular');
@@ -45,15 +42,38 @@ angular.module('app', [
 ]);
 ```
 
+### Bower installation
 
-Then declare the typer directive in your markup
+```
+bower install angular-typer
+```
+
+include the typer directive source file in your html
+
+
+```
+ <script src="bower_components/angular-typer/dist/typer.min.js"></script>
+```
+
+Mark the typer module as a dependency of your angular app
+
+```
+angular.module('myApp', ['typer']);
+
+```
+
+---
+
+### Declaring directive
+
+Then declare the typer directive in your HTML
 
 ```
 <typer words="['JavaScript', 'Angular', 'Cats']" type-time='150' backspace-time='200' start-delay='1500' highlight-background='#2980b9'></typer>
 
 ```
 
-**Note:** The directive will inherit the styles of its parent element so it is recommmend to nest it like below
+**Note:** The directive will inherit the styles of its parent element so it is recommended to nest it like below
 
 
 ```
@@ -122,7 +142,7 @@ repeat="false"
 
 ### shuffle (optional)
 
-set whether to randomly shufflethe array of words, defaults to false
+set whether to randomly shuffle the array of words, defaults to false
 
 ```
 shuffle="true"
@@ -187,7 +207,7 @@ on-complete="vm.alert('complete')"
 
 ### highlight-background (optional)
 
-background color of highlight transtion, if set this will replace the backspace transition
+background color of highlight transition, if set this will replace the backspace transition
 
 ```
 highlight-background="#2980b9"
@@ -195,7 +215,7 @@ highlight-background="#2980b9"
 
 ### highlight-color (optional)
 
-color the text for highlight transtion, defaults to white (#FFFFFF)
+color the text for highlight transition, defaults to white (#FFFFFF)
 
 ```
 highlight-color="#2ecc71"
@@ -302,7 +322,7 @@ Contributions are welcome. Please be sure to document your changes.
 * set the default repeat attribute to true
 
 #### 0.1.0
-* intital release
+* initial release
 
 # License
 
