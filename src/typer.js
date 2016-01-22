@@ -70,7 +70,7 @@
         config.words = (scope.shuffle) ? shuffle(scope.words) : scope.words;
         config.wordCount = config.words.length;
         config.count = 0;
-        config.startDelay = scope.startDelay || 500;
+        config.startDelay = scope.startDelay || 0;
         config.pause = scope.pause || 1000;
         config.typeTime = scope.typeTime || 250;
         config.backspaceTime = scope.backspaceTime || config.typeTime;
@@ -122,7 +122,10 @@
         if (scope.startTrigger !== undefined) {
           var unregister = scope.$watch('startTrigger', function(newVal, oldVal) {
             if (typeof newVal === 'boolean' && newVal) {
-              start(config, el);
+              $timeout(function() {
+                start(config, el);
+              }, config.startDelay);
+
               unregister();
             }
           });

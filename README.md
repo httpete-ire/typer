@@ -127,6 +127,8 @@ start-typing="true"
 
 Set a boolean variable on the directive that will start the directive when the variable changes to true
 
+Note: start-delay is taken into account
+
 ```
 start-trigger="vm.controllerTrigger"
 ```
@@ -151,7 +153,7 @@ shuffle="true"
 
 ### start-delay (optional)
 
-set the time before the first action happens, defaults to 500ms
+set the time before the first action happens, defaults to 0ms since v0.5.6 (500ms before)
 
 ```
 start-delay="2000"
