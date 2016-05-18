@@ -18,7 +18,7 @@
 
   angular
   .module(MODULE, [])
-  .directive('typer', Typer);
+  .directive('typer', ['$timeout', '$interval', Typer]);
 
   /**
    * Angular directive to simulate someone typing out a list of words
