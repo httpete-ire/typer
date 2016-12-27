@@ -122,18 +122,18 @@
         if (scope.startTrigger !== undefined) {
           var unregister = scope.$watch('startTrigger', function(newVal, oldVal) {
             if (typeof newVal === 'boolean' && newVal) {
-              $timeout(function() {
+              $timeout(function typerStarted() {
                 start(config, el);
-              }, config.startDelay);
+              }, config.startDelay, false);
 
               unregister();
             }
           });
         } else {
           // start the Typer animations
-          $timeout(function() {
+          $timeout(function typerAnimationsStarted() {
             start(config, el);
-          }, config.startDelay);
+          }, config.startDelay, false);
         }
 
         elem.on('$destroy', function(e) {
@@ -195,8 +195,8 @@
         var index = 0;
         var fn;
 
-        config.timer = $interval(function() {
-          element.html(word.substring(0, index + 1));
+        config.timer = $interval(function typerType() {
+          element.textContent = word.substring(0, index + 1);
 
           if (++index === letters) {
 
@@ -212,7 +212,7 @@
             nextAction(element, config, config.backAction);
           }
 
-        }, config.typeTime);
+        }, config.typeTime, 0, false);
 
       }
 
@@ -227,9 +227,9 @@
         var word = config.words[config.count];
         var letters = word.length;
 
-        config.timer = $interval(function() {
+        config.timer = $interval(function typerBackspace() {
 
-          element.html(word.substring(0, letters - 1));
+          element.textContent = word.substring(0, letters - 1);
 
           if (--letters === 0) {
             config.count =  getCount(config.count, config.wordCount);
@@ -237,7 +237,7 @@
             nextAction(element, config, type);
           }
 
-        }, config.backspaceTime);
+        }, config.backspaceTime, 0, false);
       }
 
     /**
@@ -252,16 +252,16 @@
         var letters = word.length;
         var index = 0;
 
-        config.timer = $interval(function() {
+        config.timer = $interval(function typerHighligt() {
 
-          element.html(word.substring(0, letters - 1));
-          config.span.html(word.substring(letters - 1));
+          element.textContent = word.substring(0, letters - 1);
+          config.span.textContent = word.substring(letters - 1);
 
           if (--letters === 0) {
 
-            $timeout(function() {
-              config.span.html('');
-            }, config.pause);
+            $timeout(function typerHighlightLast() {
+              config.span.textContent = '';
+            }, config.pause, false);
 
             // reset count if end of word array
             config.count = getCount(config.count, config.wordCount);
@@ -269,7 +269,7 @@
             nextAction(element, config, type);
           }
 
-        }, config.highlight.speed / letters);
+        }, config.highlight.speed / letters, 0, false);
 
       }
 
@@ -309,7 +309,7 @@
           toggleCursor(config, true);
         }
 
-        $timeout(function() {
+        $timeout(function typerNextAction() {
 
           if (!config.highlight) {
             // start blinking
@@ -317,7 +317,7 @@
           }
 
           fn.apply(null, [element, config]);
-        }, config.pause);
+        }, config.pause, false);
       }
 
     /**
